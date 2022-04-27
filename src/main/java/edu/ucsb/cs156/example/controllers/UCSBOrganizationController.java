@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 
 @Api(description = "UCSBOrganizaiton")
-@RequestMapping("/api/UCSBOrganization")
+@RequestMapping("/api/ucsborganization")
 @RestController
 @Slf4j
 public class UCSBOrganizationController extends ApiController {
