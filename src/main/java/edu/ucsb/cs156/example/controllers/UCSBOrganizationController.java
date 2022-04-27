@@ -45,7 +45,7 @@ public class UCSBOrganizationController extends ApiController {
     public UCSBOrganization postOrganizations(
             @ApiParam("orgCode (ex. SKY)") @RequestParam String orgCode,
             @ApiParam("orgTranslationShort (ex.SKYDIVING CLUB)") @RequestParam String orgTranslationShort,
-            @ApiParam("orgTranslation (ex.SKYDIVING CLUB AT UCSB") @RequestParam String orgTranslation,
+            @ApiParam("orgTranslation (ex.SKYDIVING CLUB AT UCSB)") @RequestParam String orgTranslation,
             @ApiParam("inactive (True if club is inactive)") @RequestParam boolean inactive) {
 
         UCSBOrganization organizations = new UCSBOrganization();
