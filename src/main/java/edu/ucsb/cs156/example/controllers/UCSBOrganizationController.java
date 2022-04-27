@@ -29,6 +29,7 @@ public class UCSBOrganizationController extends ApiController {
     @Autowired
     UCSBOrganizationRepository ucsbOrganizationRepository;
 
+    // GET
     @ApiOperation(value = "List all UCSB organizations")
     @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/all")
@@ -37,6 +38,7 @@ public class UCSBOrganizationController extends ApiController {
         return organizations;
     }
 
+    // POST
     @ApiOperation(value = "Create a new UCSB organization")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/post")
