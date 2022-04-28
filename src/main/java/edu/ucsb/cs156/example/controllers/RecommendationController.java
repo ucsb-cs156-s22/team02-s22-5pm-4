@@ -98,22 +98,25 @@ public class RecommendationController extends ApiController {
     //     return genericMessage("UCSBDate with id %s deleted".formatted(id));
     // }
 
-    // @ApiOperation(value = "Update a single date")
-    // @PreAuthorize("hasRole('ROLE_ADMIN')")
-    // @PutMapping("")
-    // public UCSBDate updateUCSBDate(
-    //         @ApiParam("id") @RequestParam Long id,
-    //         @RequestBody @Valid UCSBDate incoming) {
+    @ApiOperation(value = "Update a single recommendation")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PutMapping("")
+    public Recommendation updateRecommendation(
+            @ApiParam("id") @RequestParam Long id,
+            @RequestBody @Valid Recommendation incoming) {
 
-    //     UCSBDate ucsbDate = ucsbDateRepository.findById(id)
-    //             .orElseThrow(() -> new EntityNotFoundException(UCSBDate.class, id));
+        Recommendation recommendation = recommendationRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(Recommendation.class, id));
 
-    //     ucsbDate.setQuarterYYYYQ(incoming.getQuarterYYYYQ());
-    //     ucsbDate.setName(incoming.getName());
-    //     ucsbDate.setLocalDateTime(incoming.getLocalDateTime());
+        recommendation.setRequesterEmail(incoming.getRequesterEmail());
+        recommendation.setProfessorEmail(incoming.getProfessorEmail());
+        recommendation.setExplanation(incoming.getExplanation());
+        recommendation.setDateRequested(incoming.getDateRequested());
+        recommendation.setDateNeeded(incoming.getDateNeeded());
+        recommendation.setDone(incoming.getDone());
 
-    //     ucsbDateRepository.save(ucsbDate);
+        recommendationRepository.save(recommendation);
 
-    //     return ucsbDate;
-    // }
+        return recommendation;
+    }
 }
