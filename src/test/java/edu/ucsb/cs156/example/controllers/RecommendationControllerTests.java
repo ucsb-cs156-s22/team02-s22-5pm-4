@@ -57,13 +57,13 @@ public class RecommendationControllerTests extends ControllerTestCase {
                 mockMvc.perform(get("/api/Recommendation/all"))
                                 .andExpect(status().is(200)); // logged
         }
-        /*
+        
         @Test
         public void logged_out_users_cannot_get_by_id() throws Exception {
                 mockMvc.perform(get("/api/Recommendation?id=7"))
                                 .andExpect(status().is(403)); // logged out users can't get by id
         }
-        */
+        
         // Authorization tests for /api/Recommendation/post
         // (Perhaps should also have these for put and delete)
 
@@ -81,14 +81,14 @@ public class RecommendationControllerTests extends ControllerTestCase {
         }
 
         // // Tests with mocks for database actions
-        /*
+        
         @WithMockUser(roles = { "USER" })
         @Test
         public void test_that_logged_in_user_can_get_by_id_when_the_id_exists() throws Exception {
 
                 // arrange
                 LocalDateTime ldt1 = LocalDateTime.parse("2022-01-03T00:00:00");
-                LocalDateTime ldt2 = LocalDateTime.parse("2022-015-03T00:00:00");
+                LocalDateTime ldt2 = LocalDateTime.parse("2022-05-03T00:00:00");
 
                 Recommendation recommendation = Recommendation.builder()
                                 .requesterEmail("student@gmail.com")
@@ -132,7 +132,7 @@ public class RecommendationControllerTests extends ControllerTestCase {
                 assertEquals("EntityNotFoundException", json.get("type"));
                 assertEquals("Recommendation with id 7 not found", json.get("message"));
         }
-        */
+        
         @WithMockUser(roles = { "USER" })
         @Test
         public void logged_in_user_can_get_all_ucsbdates() throws Exception {
