@@ -193,8 +193,8 @@ public class RecommendationControllerTests extends ControllerTestCase {
                                             .requesterEmail("student@gmail.com")
                                             .professorEmail("prof@gmail.com")
                                             .explanation("I am completely lost")
-                                            .dateRequested(ldt2)
-                                            .dateNeeded(ldt1)
+                                            .dateRequested(ldt1)
+                                            .dateNeeded(ldt2)
                                             .done(true)
                                             .build();
 
