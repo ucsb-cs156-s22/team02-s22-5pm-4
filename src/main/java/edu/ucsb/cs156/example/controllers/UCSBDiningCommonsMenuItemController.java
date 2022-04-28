@@ -82,7 +82,7 @@ public class UCSBDiningCommonsMenuItemController extends ApiController {
         return genericMessage("UCSBDiningCommonsMenuItem with id %s deleted".formatted(id));
     }
 
-    @ApiOperation(value = "Update a single commons")
+    @ApiOperation(value = "Update a single menu item")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("")
     public UCSBDiningCommonsMenuItem updateMenuItem(
