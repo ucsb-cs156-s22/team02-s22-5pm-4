@@ -222,7 +222,7 @@ public class UCSBOrganizationTests extends ControllerTestCase {
 
     @WithMockUser(roles = { "ADMIN", "USER" })
     @Test
-    public void admin_cannot_edit_commons_that_does_not_organization() throws Exception {
+    public void admin_cannot_edit_organization_that_does_not_exist() throws Exception {
         // arrange
 
         UCSBOrganization ggEdited = UCSBOrganization.builder()
@@ -250,6 +250,53 @@ public class UCSBOrganizationTests extends ControllerTestCase {
         Map<String, Object> json = responseToJson(response);
         assertEquals("UCSBOrganization with id gg not found", json.get("message"));
 
+    }
+
+    @WithMockUser(roles = { "ADMIN", "USER" })
+    @Test
+    public void admin_tries_to_delete_non_existant_organization_and_gets_right_error_message()
+            throws Exception {
+        // arrange
+
+        when(ucsbOrganizationRepository.findById(eq("gg"))).thenReturn(Optional.empty());
+
+        // act
+        MvcResult response = mockMvc.perform(
+                delete("/api/ucsborganization?orgCode=gg")
+                        .with(csrf()))
+                .andExpect(status().isNotFound()).andReturn();
+
+        // assert
+        verify(ucsbOrganizationRepository, times(1)).findById("gg");
+        Map<String, Object> json = responseToJson(response);
+        assertEquals("UCSBOrganization with id gg not found", json.get("message"));
+    }
+
+    @WithMockUser(roles = { "ADMIN", "USER" })
+    @Test
+    public void admin_can_delete_an_organization() throws Exception {
+        // arrange
+        UCSBOrganization gg = UCSBOrganization.builder()
+                .orgCode("GG")
+                .orgTranslationShort("Gaucho Gaming")
+                .orgTranslation("UCSB Gaucho Gaming")
+                .inactive(true)
+                .build();
+
+        when(ucsbOrganizationRepository.findById(eq("GG"))).thenReturn(Optional.of(gg));
+
+        // act
+        MvcResult response = mockMvc.perform(
+                delete("/api/ucsborganization?orgCode=GG")
+                        .with(csrf()))
+                .andExpect(status().isOk()).andReturn();
+
+        // assert
+        verify(ucsbOrganizationRepository, times(1)).findById("GG");
+        verify(ucsbOrganizationRepository, times(1)).delete(any());
+
+        Map<String, Object> json = responseToJson(response);
+        assertEquals("UCSBOrganization with id GG deleted", json.get("message"));
     }
 
 }
