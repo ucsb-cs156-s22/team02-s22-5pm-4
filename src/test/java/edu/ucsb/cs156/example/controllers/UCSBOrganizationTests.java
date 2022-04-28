@@ -181,4 +181,75 @@ public class UCSBOrganizationTests extends ControllerTestCase {
         assertEquals(expectedJson, responseString);
     }
 
+    @WithMockUser(roles = { "ADMIN", "USER" })
+    @Test
+    public void admin_can_edit_an_existing_organization() throws Exception {
+        // arrange
+
+        UCSBOrganization gg = UCSBOrganization.builder()
+                .orgCode("GG")
+                .orgTranslationShort("Gaucho Gaming")
+                .orgTranslation("UCSB Gaucho Gaming")
+                .inactive(true)
+                .build();
+
+        UCSBOrganization ggEdited = UCSBOrganization.builder()
+                .orgCode("GG!")
+                .orgTranslationShort("Gaucho Gaming!")
+                .orgTranslation("UCSB Gaucho Gaming!")
+                .inactive(false)
+                .build();
+
+        String requestBody = mapper.writeValueAsString(ggEdited);
+
+        when(ucsbOrganizationRepository.findById(eq("GG"))).thenReturn(Optional.of(gg));
+
+        // act
+        MvcResult response = mockMvc.perform(
+                put("/api/ucsborganization?orgCode=GG")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding("utf-8")
+                        .content(requestBody)
+                        .with(csrf()))
+                .andExpect(status().isOk()).andReturn();
+
+        // assert
+        verify(ucsbOrganizationRepository, times(1)).findById("GG");
+        verify(ucsbOrganizationRepository, times(1)).save(ggEdited); // should be saved with updated info
+        String responseString = response.getResponse().getContentAsString();
+        assertEquals(requestBody, responseString);
+    }
+
+    @WithMockUser(roles = { "ADMIN", "USER" })
+    @Test
+    public void admin_cannot_edit_commons_that_does_not_organization() throws Exception {
+        // arrange
+
+        UCSBOrganization ggEdited = UCSBOrganization.builder()
+                .orgCode("GG!")
+                .orgTranslationShort("Gaucho Gaming!")
+                .orgTranslation("UCSB Gaucho Gaming!")
+                .inactive(false)
+                .build();
+
+        String requestBody = mapper.writeValueAsString(ggEdited);
+
+        when(ucsbOrganizationRepository.findById(eq("gg"))).thenReturn(Optional.empty());
+
+        // act
+        MvcResult response = mockMvc.perform(
+                put("/api/ucsborganization?orgCode=gg")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding("utf-8")
+                        .content(requestBody)
+                        .with(csrf()))
+                .andExpect(status().isNotFound()).andReturn();
+
+        // assert
+        verify(ucsbOrganizationRepository, times(1)).findById("gg");
+        Map<String, Object> json = responseToJson(response);
+        assertEquals("UCSBOrganization with id gg not found", json.get("message"));
+
+    }
+
 }
