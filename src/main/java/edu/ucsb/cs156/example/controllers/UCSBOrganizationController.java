@@ -58,4 +58,15 @@ public class UCSBOrganizationController extends ApiController {
 
         return savedOrganizations;
     }
+
+    @ApiOperation(value = "Get a single UCSB Organization")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @GetMapping("")
+    public UCSBOrganization getById(
+            @ApiParam("orgCode") @RequestParam String orgCode) {
+        UCSBOrganization organization = ucsbOrganizationRepository.findById(orgCode)
+                .orElseThrow(() -> new EntityNotFoundException(UCSBOrganization.class, orgCode));
+
+        return organization;
+    }
 }

@@ -128,4 +128,57 @@ public class UCSBOrganizationTests extends ControllerTestCase {
         assertEquals(expectedJson, responseString);
     }
 
+    @Test
+    public void logged_out_users_cannot_get_by_id() throws Exception {
+        mockMvc.perform(get("/api/ucsborganization?orgCode=gg"))
+                .andExpect(status().is(403)); // logged out users can't get by id
+    }
+
+    @WithMockUser(roles = { "USER" })
+    @Test
+    public void test_that_logged_in_user_can_get_by_id_when_the_id_does_not_exist() throws Exception {
+
+        // arrange
+
+        when(ucsbOrganizationRepository.findById(eq("137"))).thenReturn(Optional.empty());
+
+        // act
+        MvcResult response = mockMvc.perform(get("/api/ucsborganization?orgCode=137"))
+                .andExpect(status().isNotFound()).andReturn();
+
+        // assert
+
+        verify(ucsbOrganizationRepository, times(1)).findById(eq("137"));
+        Map<String, Object> json = responseToJson(response);
+        assertEquals("EntityNotFoundException", json.get("type"));
+        assertEquals("UCSBOrganization with id 137 not found", json.get("message"));
+    }
+
+    @WithMockUser(roles = { "USER" })
+    @Test
+    public void test_that_logged_in_user_can_get_by_id_when_the_id_exists() throws Exception {
+
+        // arrange
+
+        UCSBOrganization gg = UCSBOrganization.builder()
+                .orgCode("GG")
+                .orgTranslationShort("Gaucho Gaming")
+                .orgTranslation("UCSB Gaucho Gaming")
+                .inactive(true)
+                .build();
+
+        when(ucsbOrganizationRepository.findById(eq("GG"))).thenReturn(Optional.of(gg));
+
+        // act
+        MvcResult response = mockMvc.perform(get("/api/ucsborganization?orgCode=GG"))
+                .andExpect(status().isOk()).andReturn();
+
+        // assert
+
+        verify(ucsbOrganizationRepository, times(1)).findById(eq("GG"));
+        String expectedJson = mapper.writeValueAsString(gg);
+        String responseString = response.getResponse().getContentAsString();
+        assertEquals(expectedJson, responseString);
+    }
+
 }
