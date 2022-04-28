@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 @Builder
 @Entity(name = "article")
 public class Article {
-  @Id
+  @Id 
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private long id;
 
