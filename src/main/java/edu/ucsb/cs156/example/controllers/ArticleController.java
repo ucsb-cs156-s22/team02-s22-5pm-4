@@ -44,16 +44,16 @@ public class ArticleController extends ApiController {
         return all_articles;
     }
 
-    // @ApiOperation(value = "Get a single article")
-    // @PreAuthorize("hasRole('ROLE_USER')")
-    // @GetMapping("")
-    // public Article getById(
-    //         @ApiParam("id") @RequestParam Long id) {
-    //     Article single_article = articleRepo.findById(id)
-    //             .orElseThrow(() -> new EntityNotFoundException(Article.class, id));
+    @ApiOperation(value = "Get a single article")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @GetMapping("")
+    public Article getById(
+            @ApiParam("id") @RequestParam Long id) {
+        Article single_article = articleRepo.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(Article.class, id));
 
-    //     return single_article;
-    // }
+        return single_article;
+    }
 
     @ApiOperation(value = "Create a new article")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -62,14 +62,15 @@ public class ArticleController extends ApiController {
             @ApiParam("title (title of the article)") @RequestParam String title,
             @ApiParam("url (url of the article)") @RequestParam String url,
             @ApiParam("explanation (a brief explanation of the article)") @RequestParam String explanation,
-            @ApiParam("email (of the person who submitted the Article") @RequestParam String email,
-            @ApiParam("dateAdded (in iso format, e.g. YYYY-mm-ddTHH:MM:SS; see https://en.wikipedia.org/wiki/ISO_8601)") @RequestParam("dateAdded") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dateAdded)
+            @ApiParam("email (of the person who submitted the Article)") @RequestParam String email,
+            @ApiParam("dateAdded") @RequestParam LocalDateTime dateAdded
+            )
             throws JsonProcessingException {
 
         // For an explanation of @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
         // See: https://www.baeldung.com/spring-date-parameters
 
-        log.info("dateAdded={}", dateAdded);
+        //log.info("dateAdded={}", dateAdded);
 
         Article new_article = new Article();
         new_article.setTitle(title);
@@ -83,36 +84,36 @@ public class ArticleController extends ApiController {
         return savedArticle;
     }
 
-    // @ApiOperation(value = "Delete an Article")
-    // @PreAuthorize("hasRole('ROLE_ADMIN')")
-    // @DeleteMapping("")
-    // public Object deleteArticle(
-    //         @ApiParam("id") @RequestParam Long id) {
-    //     Article art = articleRepo.findById(id)
-    //             .orElseThrow(() -> new EntityNotFoundException(Article.class, id));
+    @ApiOperation(value = "Delete an Article")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @DeleteMapping("")
+    public Object deleteArticle(
+            @ApiParam("id") @RequestParam Long id) {
+        Article art = articleRepo.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(Article.class, id));
 
-    //     ArticleRepository.delete(art);
-    //     return genericMessage("Article with id %s deleted".formatted(id));
-    // }
+        articleRepo.delete(art);
+        return genericMessage("Article with id %s deleted".formatted(id));
+    }
 
-    // @ApiOperation(value = "Update a single Article")
-    // @PreAuthorize("hasRole('ROLE_ADMIN')")
-    // @PutMapping("")
-    // public Article updateArticle(
-    //         @ApiParam("id") @RequestParam Long id,
-    //         @RequestBody @Valid Article incoming) {
+    @ApiOperation(value = "Update a single Article")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PutMapping("")
+    public Article updateArticle(
+            @ApiParam("id") @RequestParam Long id,
+            @RequestBody @Valid Article incoming) {
 
-    //     Article art = articleRepo.findById(id)
-    //             .orElseThrow(() -> new EntityNotFoundException(Article.class, id));
+        Article art = articleRepo.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(Article.class, id));
 
-    //     art.setTitle(incoming.getTitle());
-    //     art.setURL(incoming.getURL());
-    //     art.setExplanation(incoming.getExplanation());
-    //     art.setEmail(incoming.getEmail());
-    //     art.setLocalDateTime(incoming.getLocalDateTime());
+        art.setTitle(incoming.getTitle());
+        art.setUrl(incoming.getUrl());
+        art.setExplanation(incoming.getExplanation());
+        art.setEmail(incoming.getEmail());
+        art.setDateAdded(incoming.getDateAdded());
 
-    //     articleRepo.save(art);
+        articleRepo.save(art);
 
-    //     return art;
-    // }
+        return art;
+    }
 }
