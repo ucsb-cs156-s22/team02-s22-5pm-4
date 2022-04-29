@@ -44,7 +44,7 @@ public class HelpRequestController extends ApiController {
             @ApiParam("Email of user making request") @RequestParam String requesterEmail,
             @ApiParam("ID of team") @RequestParam String teamId,
             @ApiParam("In-person table or Zoom breakout room (table or breakoutroom)") @RequestParam String tableOrBreakoutRoom,
-            @ApiParam("time (in iso format, e.g. YYYY-mm-ddTHH:MM:SS; see https://en.wikipedia.org/wiki/ISO_8601)") @RequestParam("localDateTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime requestTime,
+            @ApiParam("Time (in iso format, e.g. YYYY-mm-ddTHH:MM:SS; see https://en.wikipedia.org/wiki/ISO_8601)") @RequestParam("localDateTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime requestTime,
             @ApiParam("Explanation of issue") @RequestParam String explanation,
             @ApiParam("Whether issue has been resolved(true/false)") @RequestParam boolean solved)
 
