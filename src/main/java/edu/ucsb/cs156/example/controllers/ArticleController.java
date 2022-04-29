@@ -8,8 +8,6 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-
+import com.fasterxml.jackson.core.JsonProcessingException;
 import java.time.LocalDateTime;
 
 
@@ -63,14 +61,12 @@ public class ArticleController extends ApiController {
             @ApiParam("url (url of the article)") @RequestParam String url,
             @ApiParam("explanation (a brief explanation of the article)") @RequestParam String explanation,
             @ApiParam("email (of the person who submitted the Article)") @RequestParam String email,
-            @ApiParam("dateAdded") @RequestParam LocalDateTime dateAdded
+            @ApiParam("dateAdded (in iso format, e.g. YYYY-mm-ddTHH:MM:SS") @RequestParam("dateAdded") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dateAdded
             )
-            throws JsonProcessingException {
+            throws JsonProcessingException 
+            {
 
-        // For an explanation of @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-        // See: https://www.baeldung.com/spring-date-parameters
-
-        //log.info("dateAdded={}", dateAdded);
+        // log.info("dateAdded={}", dateAdded);
 
         Article new_article = new Article();
         new_article.setTitle(title);
