@@ -3,6 +3,7 @@ package edu.ucsb.cs156.example.controllers;
 import edu.ucsb.cs156.example.repositories.UserRepository;
 import edu.ucsb.cs156.example.testconfig.TestConfig;
 import edu.ucsb.cs156.example.ControllerTestCase;
+import edu.ucsb.cs156.example.entities.HelpRequest;
 import edu.ucsb.cs156.example.entities.UCSBDate;
 import edu.ucsb.cs156.example.repositories.HelpRequestRepository;
 
@@ -57,14 +58,6 @@ public class HelpRequestControllerTests extends ControllerTestCase {
                                 .andExpect(status().is(200)); // logged
         }
 
-        @Test
-        public void logged_out_users_cannot_get_by_id() throws Exception {
-                mockMvc.perform(get("/api/helprequest?id=7"))
-                                .andExpect(status().is(403)); // logged out users can't get by id
-        }
-
-        // Authorization tests for /api/helprequest/post
-        // (Perhaps should also have these for put and delete)
 
         @Test
         public void logged_out_users_cannot_post() throws Exception {
@@ -79,54 +72,6 @@ public class HelpRequestControllerTests extends ControllerTestCase {
                                 .andExpect(status().is(403)); // only admins can post
         }
 
-        // // Tests with mocks for database actions
-
-        @WithMockUser(roles = { "USER" })
-        @Test
-        public void test_that_logged_in_user_can_get_by_id_when_the_id_exists() throws Exception {
-
-                // arrange
-                LocalDateTime ldt = LocalDateTime.parse("2022-01-03T00:00:00");
-
-                UCSBDate ucsbDate = UCSBDate.builder()
-                                .name("firstDayOfClasses")
-                                .quarterYYYYQ("20222")
-                                .localDateTime(ldt)
-                                .build();
-
-                when(helpRequestRepository.findById(eq(7L))).thenReturn(Optional.of(ucsbDate));
-
-                // act
-                MvcResult response = mockMvc.perform(get("/api/helprequest?id=7"))
-                                .andExpect(status().isOk()).andReturn();
-
-                // assert
-
-                verify(helpRequestRepository, times(1)).findById(eq(7L));
-                String expectedJson = mapper.writeValueAsString(ucsbDate);
-                String responseString = response.getResponse().getContentAsString();
-                assertEquals(expectedJson, responseString);
-        }
-
-        @WithMockUser(roles = { "USER" })
-        @Test
-        public void test_that_logged_in_user_can_get_by_id_when_the_id_does_not_exist() throws Exception {
-
-                // arrange
-
-                when(helpRequestRepository.findById(eq(7L))).thenReturn(Optional.empty());
-
-                // act
-                MvcResult response = mockMvc.perform(get("/api/helprequest?id=7"))
-                                .andExpect(status().isNotFound()).andReturn();
-
-                // assert
-
-                verify(helpRequestRepository, times(1)).findById(eq(7L));
-                Map<String, Object> json = responseToJson(response);
-                assertEquals("EntityNotFoundException", json.get("type"));
-                assertEquals("UCSBDate with id 7 not found", json.get("message"));
-        }
 
         @WithMockUser(roles = { "USER" })
         @Test
@@ -135,24 +80,30 @@ public class HelpRequestControllerTests extends ControllerTestCase {
                 // arrange
                 LocalDateTime ldt1 = LocalDateTime.parse("2022-01-03T00:00:00");
 
-                UCSBDate ucsbDate1 = UCSBDate.builder()
-                                .name("firstDayOfClasses")
-                                .quarterYYYYQ("20222")
-                                .localDateTime(ldt1)
+                HelpRequest helpRequest1 = HelpRequest.builder()
+                                .requesterEmail("cgaucho@ucsb.edu")
+                                .teamId("4")
+                                .tableOrBreakoutRoom("table")
+                                .requestTime(ldt1)
+                                .explanation("testing")
+                                .solved(false)
                                 .build();
 
                 LocalDateTime ldt2 = LocalDateTime.parse("2022-03-11T00:00:00");
 
-                UCSBDate ucsbDate2 = UCSBDate.builder()
-                                .name("lastDayOfClasses")
-                                .quarterYYYYQ("20222")
-                                .localDateTime(ldt2)
+                HelpRequest helpRequest2 = HelpRequest.builder()
+                                .requesterEmail("cgaucho2@ucsb.edu")
+                                .teamId("5")
+                                .tableOrBreakoutRoom("table")
+                                .requestTime(ldt2)
+                                .explanation("testing")
+                                .solved(false)
                                 .build();
 
-                ArrayList<UCSBDate> expectedDates = new ArrayList<>();
-                expectedDates.addAll(Arrays.asList(ucsbDate1, ucsbDate2));
+                ArrayList<HelpRequest> expectedRequests = new ArrayList<>();
+                expectedRequests.addAll(Arrays.asList(helpRequest1, helpRequest2));
 
-                when(helpRequestRepository.findAll()).thenReturn(expectedDates);
+                when(helpRequestRepository.findAll()).thenReturn(expectedRequests);
 
                 // act
                 MvcResult response = mockMvc.perform(get("/api/helprequest/all"))
@@ -161,158 +112,37 @@ public class HelpRequestControllerTests extends ControllerTestCase {
                 // assert
 
                 verify(helpRequestRepository, times(1)).findAll();
-                String expectedJson = mapper.writeValueAsString(expectedDates);
+                String expectedJson = mapper.writeValueAsString(expectedRequests);
                 String responseString = response.getResponse().getContentAsString();
                 assertEquals(expectedJson, responseString);
         }
 
         @WithMockUser(roles = { "ADMIN", "USER" })
         @Test
-        public void an_admin_user_can_post_a_new_ucsbdate() throws Exception {
+        public void an_admin_user_can_post_a_new_helprequest() throws Exception {
                 // arrange
 
                 LocalDateTime ldt1 = LocalDateTime.parse("2022-01-03T00:00:00");
 
-                UCSBDate ucsbDate1 = UCSBDate.builder()
-                                .name("firstDayOfClasses")
-                                .quarterYYYYQ("20222")
-                                .localDateTime(ldt1)
+                HelpRequest helpRequest1 = HelpRequest.builder()
+                                .requesterEmail("cgaucho@ucsb.edu")
+                                .teamId("4")
+                                .tableOrBreakoutRoom("table")
+                                .requestTime(ldt1)
+                                .explanation("testing")
+                                .solved(false)
                                 .build();
-
-                when(helpRequestRepository.save(eq(ucsbDate1))).thenReturn(ucsbDate1);
+                when(helpRequestRepository.save(eq(helpRequest1))).thenReturn(helpRequest1);
 
                 // act
                 MvcResult response = mockMvc.perform(
-                                post("/api/helprequest/post?name=firstDayOfClasses&quarterYYYYQ=20222&localDateTime=2022-01-03T00:00:00")
-                                                .with(csrf()))
+                                post("/api/helprequest/post?explanation=testing&localDateTime=2022-01-03T00%3A00%3A00&requesterEmail=cgaucho%40ucsb.edu&solved=false&tableOrBreakoutRoom=table&teamId=4"))
                                 .andExpect(status().isOk()).andReturn();
 
                 // assert
-                verify(helpRequestRepository, times(1)).save(ucsbDate1);
-                String expectedJson = mapper.writeValueAsString(ucsbDate1);
+                verify(helpRequestRepository, times(1)).save(helpRequest1);
+                String expectedJson = mapper.writeValueAsString(helpRequest1); 
                 String responseString = response.getResponse().getContentAsString();
                 assertEquals(expectedJson, responseString);
-        }
-
-        @WithMockUser(roles = { "ADMIN", "USER" })
-        @Test
-        public void admin_can_delete_a_date() throws Exception {
-                // arrange
-
-                LocalDateTime ldt1 = LocalDateTime.parse("2022-01-03T00:00:00");
-
-                UCSBDate ucsbDate1 = UCSBDate.builder()
-                                .name("firstDayOfClasses")
-                                .quarterYYYYQ("20222")
-                                .localDateTime(ldt1)
-                                .build();
-
-                when(helpRequestRepository.findById(eq(15L))).thenReturn(Optional.of(ucsbDate1));
-
-                // act
-                MvcResult response = mockMvc.perform(
-                                delete("/api/helprequest?id=15")
-                                                .with(csrf()))
-                                .andExpect(status().isOk()).andReturn();
-
-                // assert
-                verify(helpRequestRepository, times(1)).findById(15L);
-                verify(helpRequestRepository, times(1)).delete(any());
-
-                Map<String, Object> json = responseToJson(response);
-                assertEquals("UCSBDate with id 15 deleted", json.get("message"));
-        }
-
-        @WithMockUser(roles = { "ADMIN", "USER" })
-        @Test
-        public void admin_tries_to_delete_non_existant_ucsbdate_and_gets_right_error_message()
-                        throws Exception {
-                // arrange
-
-                when(helpRequestRepository.findById(eq(15L))).thenReturn(Optional.empty());
-
-                // act
-                MvcResult response = mockMvc.perform(
-                                delete("/api/helprequest?id=15")
-                                                .with(csrf()))
-                                .andExpect(status().isNotFound()).andReturn();
-
-                // assert
-                verify(helpRequestRepository, times(1)).findById(15L);
-                Map<String, Object> json = responseToJson(response);
-                assertEquals("UCSBDate with id 15 not found", json.get("message"));
-        }
-
-        @WithMockUser(roles = { "ADMIN", "USER" })
-        @Test
-        public void admin_can_edit_an_existing_ucsbdate() throws Exception {
-                // arrange
-
-                LocalDateTime ldt1 = LocalDateTime.parse("2022-01-03T00:00:00");
-                LocalDateTime ldt2 = LocalDateTime.parse("2023-01-03T00:00:00");
-
-                UCSBDate ucsbDateOrig = UCSBDate.builder()
-                                .name("firstDayOfClasses")
-                                .quarterYYYYQ("20222")
-                                .localDateTime(ldt1)
-                                .build();
-
-                UCSBDate ucsbDateEdited = UCSBDate.builder()
-                                .name("firstDayOfFestivus")
-                                .quarterYYYYQ("20232")
-                                .localDateTime(ldt2)
-                                .build();
-
-                String requestBody = mapper.writeValueAsString(ucsbDateEdited);
-
-                when(helpRequestRepository.findById(eq(67L))).thenReturn(Optional.of(ucsbDateOrig));
-
-                // act
-                MvcResult response = mockMvc.perform(
-                                put("/api/helprequest?id=67")
-                                                .contentType(MediaType.APPLICATION_JSON)
-                                                .characterEncoding("utf-8")
-                                                .content(requestBody)
-                                                .with(csrf()))
-                                .andExpect(status().isOk()).andReturn();
-
-                // assert
-                verify(helpRequestRepository, times(1)).findById(67L);
-                verify(helpRequestRepository, times(1)).save(ucsbDateEdited); // should be saved with correct user
-                String responseString = response.getResponse().getContentAsString();
-                assertEquals(requestBody, responseString);
-        }
-
-        @WithMockUser(roles = { "ADMIN", "USER" })
-        @Test
-        public void admin_cannot_edit_ucsbdate_that_does_not_exist() throws Exception {
-                // arrange
-
-                LocalDateTime ldt1 = LocalDateTime.parse("2022-01-03T00:00:00");
-
-                UCSBDate ucsbEditedDate = UCSBDate.builder()
-                                .name("firstDayOfClasses")
-                                .quarterYYYYQ("20222")
-                                .localDateTime(ldt1)
-                                .build();
-
-                String requestBody = mapper.writeValueAsString(ucsbEditedDate);
-
-                when(helpRequestRepository.findById(eq(67L))).thenReturn(Optional.empty());
-
-                // act
-                MvcResult response = mockMvc.perform(
-                                put("/api/helprequest?id=67")
-                                                .contentType(MediaType.APPLICATION_JSON)
-                                                .characterEncoding("utf-8")
-                                                .content(requestBody)
-                                                .with(csrf()))
-                                .andExpect(status().isNotFound()).andReturn();
-
-                // assert
-                verify(helpRequestRepository, times(1)).findById(67L);
-                Map<String, Object> json = responseToJson(response);
-                assertEquals("UCSBDate with id 67 not found", json.get("message"));
-
         }
 }
