@@ -46,14 +46,10 @@ public class HelpRequestController extends ApiController {
             @ApiParam("In-person table or Zoom breakout room (table or breakoutroom)") @RequestParam String tableOrBreakoutRoom,
             @ApiParam("Time (in iso format, e.g. YYYY-mm-ddTHH:MM:SS; see https://en.wikipedia.org/wiki/ISO_8601)") @RequestParam("localDateTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime requestTime,
             @ApiParam("Explanation of issue") @RequestParam String explanation,
-            @ApiParam("Whether issue has been resolved(true/false)") @RequestParam boolean solved)
-
-            throws JsonProcessingException {
+            @ApiParam("Whether issue has been resolved(true/false)") @RequestParam boolean solved){
 
         // For an explanation of @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
         // See: https://www.baeldung.com/spring-date-parameters
-
-        log.info("requestTime={}", requestTime);
 
         HelpRequest helpRequest = new HelpRequest();
         helpRequest.setRequesterEmail(requesterEmail);
