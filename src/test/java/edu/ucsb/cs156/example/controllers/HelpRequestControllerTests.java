@@ -130,7 +130,7 @@ public class HelpRequestControllerTests extends ControllerTestCase {
                                 .tableOrBreakoutRoom("table")
                                 .requestTime(ldt)
                                 .explanation("test")
-                                .solved(false)
+                                .solved(true)
                                 .build();
 
                 when(helpRequestRepository.save(eq(helpRequest))).thenReturn(helpRequest);
@@ -143,7 +143,7 @@ public class HelpRequestControllerTests extends ControllerTestCase {
                                 "&tableOrBreakoutRoom=table" +
                                 "&localDateTime=2022-01-03T00:00:00" +
                                 "&explanation=test" +
-                                "&solved=false")
+                                "&solved=true")
                                 .with(csrf()))
                                 .andExpect(status().isOk()).andReturn();
 
