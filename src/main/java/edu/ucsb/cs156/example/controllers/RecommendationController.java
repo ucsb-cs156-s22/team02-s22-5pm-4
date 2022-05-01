@@ -36,7 +36,7 @@ public class RecommendationController extends ApiController {
     @Autowired
     RecommendationRepository recommendationRepository;
 
-    @ApiOperation(value = "List all recommendation's")
+    @ApiOperation(value = "List all recommendations")
     @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/all")
     public Iterable<Recommendation> allRecommendations() {
