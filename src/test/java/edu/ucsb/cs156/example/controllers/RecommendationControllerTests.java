@@ -212,59 +212,63 @@ public class RecommendationControllerTests extends ControllerTestCase {
                 String responseString = response.getResponse().getContentAsString();
                 assertEquals(expectedJson, responseString);
         }
-        /*
+        // /*
         @WithMockUser(roles = { "ADMIN", "USER" })
         @Test
-        public void admin_can_delete_a_date() throws Exception {
+        public void admin_can_delete_a_recommendation() throws Exception {
                 // arrange
 
                 LocalDateTime ldt1 = LocalDateTime.parse("2022-01-03T00:00:00");
+                LocalDateTime ldt2 = LocalDateTime.parse("2022-01-03T00:00:00");
 
-                UCSBDate ucsbDate1 = UCSBDate.builder()
-                                .name("firstDayOfClasses")
-                                .quarterYYYYQ("20222")
-                                .localDateTime(ldt1)
-                                .build();
+                Recommendation recommendation = Recommendation.builder()
+                                        .requesterEmail("student@gmail.com")
+                                        .professorEmail("prof@gmail.com")
+                                        .explanation("Hold more office hours")
+                                        .dateRequested(ldt1)
+                                        .dateNeeded(ldt2)
+                                        .done(false)
+                                        .build();
 
-                when(ucsbDateRepository.findById(eq(15L))).thenReturn(Optional.of(ucsbDate1));
+                when(recommendationRepository.findById(eq(15L))).thenReturn(Optional.of(recommendation));
 
                 // act
                 MvcResult response = mockMvc.perform(
-                                delete("/api/ucsbdates?id=15")
+                                delete("/api/Recommendation?id=15")
                                                 .with(csrf()))
                                 .andExpect(status().isOk()).andReturn();
 
                 // assert
-                verify(ucsbDateRepository, times(1)).findById(15L);
-                verify(ucsbDateRepository, times(1)).delete(any());
+                verify(recommendationRepository, times(1)).findById(15L);
+                verify(recommendationRepository, times(1)).delete(any());
 
                 Map<String, Object> json = responseToJson(response);
-                assertEquals("UCSBDate with id 15 deleted", json.get("message"));
+                assertEquals("Recommendation with id 15 deleted", json.get("message"));
         }
 
         @WithMockUser(roles = { "ADMIN", "USER" })
         @Test
-        public void admin_tries_to_delete_non_existant_ucsbdate_and_gets_right_error_message()
+        public void admin_tries_to_delete_non_existant_recommendation_and_gets_right_error_message()
                         throws Exception {
                 // arrange
 
-                when(ucsbDateRepository.findById(eq(15L))).thenReturn(Optional.empty());
+                when(recommendationRepository.findById(eq(15L))).thenReturn(Optional.empty());
 
                 // act
                 MvcResult response = mockMvc.perform(
-                                delete("/api/ucsbdates?id=15")
+                                delete("/api/Recommendation?id=15")
                                                 .with(csrf()))
                                 .andExpect(status().isNotFound()).andReturn();
 
                 // assert
-                verify(ucsbDateRepository, times(1)).findById(15L);
+                verify(recommendationRepository, times(1)).findById(15L);
                 Map<String, Object> json = responseToJson(response);
-                assertEquals("UCSBDate with id 15 not found", json.get("message"));
+                assertEquals("Recommendation with id 15 not found", json.get("message"));
         }
-        */
+        // */
         @WithMockUser(roles = { "ADMIN", "USER" })
         @Test
-        public void admin_can_edit_an_existing_ucsbdate() throws Exception {
+        public void admin_can_edit_an_existing_recommendation() throws Exception {
                 // arrange
 
                 LocalDateTime ldt1 = LocalDateTime.parse("2022-01-03T00:00:00");
