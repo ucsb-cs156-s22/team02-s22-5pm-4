@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.time.LocalDateTime;
 
 @Api(description = "HelpRequest")
-@RequestMapping("/api/helprequest")
+@RequestMapping("/api/HelpRequest")
 @RestController
 @Slf4j
 public class HelpRequestController extends ApiController {
@@ -38,13 +38,12 @@ public class HelpRequestController extends ApiController {
         return requests;
     }
 
-    @ApiOperation(value = "Get a single help request")
+    @ApiOperation(value = "Show a single help request of id=123")
     @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("")
-    public HelpRequest getById(
-            @ApiParam("id") @RequestParam Long id) {
-        HelpRequest helpRequest = helpRequestRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(HelpRequest.class, id));
+    public HelpRequest getById() {
+        HelpRequest helpRequest = helpRequestRepository.findById(123L)
+                .orElseThrow(() -> new EntityNotFoundException(HelpRequest.class, 123L));
 
         return helpRequest;
     }
