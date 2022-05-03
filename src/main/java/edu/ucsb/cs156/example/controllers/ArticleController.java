@@ -42,16 +42,16 @@ public class ArticleController extends ApiController {
         return all_articles;
     }
 
-    @ApiOperation(value = "Get a single article")
-    @PreAuthorize("hasRole('ROLE_USER')")
-    @GetMapping("")
-    public Article getById(
-            @ApiParam("id") @RequestParam Long id) {
-        Article single_article = articleRepo.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(Article.class, id));
+    // @ApiOperation(value = "Get a single article")
+    // @PreAuthorize("hasRole('ROLE_USER')")
+    // @GetMapping("")
+    // public Article getById(
+    //         @ApiParam("id") @RequestParam Long id) {
+    //     Article single_article = articleRepo.findById(id)
+    //             .orElseThrow(() -> new EntityNotFoundException(Article.class, id));
 
-        return single_article;
-    }
+    //     return single_article;
+    // }
 
     @ApiOperation(value = "Create a new article")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -80,36 +80,36 @@ public class ArticleController extends ApiController {
         return savedArticle;
     }
 
-    @ApiOperation(value = "Delete an Article")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @DeleteMapping("")
-    public Object deleteArticle(
-            @ApiParam("id") @RequestParam Long id) {
-        Article art = articleRepo.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(Article.class, id));
+    // @ApiOperation(value = "Delete an Article")
+    // @PreAuthorize("hasRole('ROLE_ADMIN')")
+    // @DeleteMapping("")
+    // public Object deleteArticle(
+    //         @ApiParam("id") @RequestParam Long id) {
+    //     Article art = articleRepo.findById(id)
+    //             .orElseThrow(() -> new EntityNotFoundException(Article.class, id));
 
-        articleRepo.delete(art);
-        return genericMessage("Article with id %s deleted".formatted(id));
-    }
+    //     articleRepo.delete(art);
+    //     return genericMessage("Article with id %s deleted".formatted(id));
+    // }
 
-    @ApiOperation(value = "Update a single Article")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @PutMapping("")
-    public Article updateArticle(
-            @ApiParam("id") @RequestParam Long id,
-            @RequestBody @Valid Article incoming) {
+    // @ApiOperation(value = "Update a single Article")
+    // @PreAuthorize("hasRole('ROLE_ADMIN')")
+    // @PutMapping("")
+    // public Article updateArticle(
+    //         @ApiParam("id") @RequestParam Long id,
+    //         @RequestBody @Valid Article incoming) {
 
-        Article art = articleRepo.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(Article.class, id));
+    //     Article art = articleRepo.findById(id)
+    //             .orElseThrow(() -> new EntityNotFoundException(Article.class, id));
 
-        art.setTitle(incoming.getTitle());
-        art.setUrl(incoming.getUrl());
-        art.setExplanation(incoming.getExplanation());
-        art.setEmail(incoming.getEmail());
-        art.setDateAdded(incoming.getDateAdded());
+    //     art.setTitle(incoming.getTitle());
+    //     art.setUrl(incoming.getUrl());
+    //     art.setExplanation(incoming.getExplanation());
+    //     art.setEmail(incoming.getEmail());
+    //     art.setDateAdded(incoming.getDateAdded());
 
-        articleRepo.save(art);
+    //     articleRepo.save(art);
 
-        return art;
-    }
+    //     return art;
+    // }
 }
