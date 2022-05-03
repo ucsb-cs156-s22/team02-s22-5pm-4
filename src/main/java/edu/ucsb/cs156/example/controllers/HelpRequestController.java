@@ -83,7 +83,7 @@ public class HelpRequestController extends ApiController {
     @ApiOperation(value = "Update a single help request")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("")
-    public HelpRequest updatHelpRequest(
+    public HelpRequest updateHelpRequest(
             @ApiParam("id") @RequestParam Long id,
             @RequestBody @Valid HelpRequest incoming) {
 
