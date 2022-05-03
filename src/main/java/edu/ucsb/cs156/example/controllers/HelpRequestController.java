@@ -109,7 +109,7 @@ public class HelpRequestController extends ApiController {
     public Object deleteHelpRequest(
             @ApiParam("id") @RequestParam Long id) {
         HelpRequest helpRequest = helpRequestRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(HelpRequestRepository.class, id));
+                .orElseThrow(() -> new EntityNotFoundException(HelpRequest.class, id));
 
         helpRequestRepository.delete(helpRequest);
         return genericMessage("HelpRequest with id %s deleted".formatted(id));
