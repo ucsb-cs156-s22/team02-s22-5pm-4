@@ -42,16 +42,16 @@ public class ArticleController extends ApiController {
         return all_articles;
     }
 
-    // @ApiOperation(value = "Get a single article")
-    // @PreAuthorize("hasRole('ROLE_USER')")
-    // @GetMapping("")
-    // public Article getById(
-    //         @ApiParam("id") @RequestParam Long id) {
-    //     Article single_article = articleRepo.findById(id)
-    //             .orElseThrow(() -> new EntityNotFoundException(Article.class, id));
+    @ApiOperation(value = "Get a single article")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @GetMapping("")
+    public Article getById(
+            @ApiParam("id") @RequestParam Long id) {
+        Article single_article = articleRepo.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(Article.class, id));
 
-    //     return single_article;
-    // }
+        return single_article;
+    }
 
     @ApiOperation(value = "Create a new article")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
