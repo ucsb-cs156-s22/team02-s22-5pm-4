@@ -151,7 +151,7 @@ public class ArticleControllerTests extends ControllerTestCase {
                                 .title("bottomTenFoods")
                                 .url("www.bing.com")
                                 .explanation("worstFood")
-                                .email("nwenstad@ucsb.edu")
+                                .email("nwenstad@umail.ucsb.edu")
                                 .dateAdded(ldt2)
                                 .build();
 
@@ -273,7 +273,7 @@ public class ArticleControllerTests extends ControllerTestCase {
                                 .title("bottomTenFoods")
                                 .url("www.bing.com")
                                 .explanation("worstFood")
-                                .email("nwenstad@ucsb.edu")
+                                .email("nwenstad@umail.ucsb.edu")
                                 .dateAdded(ldt2)
                                 .build();
 
