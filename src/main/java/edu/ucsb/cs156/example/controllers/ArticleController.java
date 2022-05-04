@@ -92,24 +92,24 @@ public class ArticleController extends ApiController {
     //     return genericMessage("Article with id %s deleted".formatted(id));
     // }
 
-    // @ApiOperation(value = "Update a single Article")
-    // @PreAuthorize("hasRole('ROLE_ADMIN')")
-    // @PutMapping("")
-    // public Article updateArticle(
-    //         @ApiParam("id") @RequestParam Long id,
-    //         @RequestBody @Valid Article incoming) {
+    @ApiOperation(value = "Update a single Article")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PutMapping("")
+    public Article updateArticle(
+            @ApiParam("id") @RequestParam Long id,
+            @RequestBody @Valid Article incoming) {
 
-    //     Article art = articleRepo.findById(id)
-    //             .orElseThrow(() -> new EntityNotFoundException(Article.class, id));
+        Article art = articleRepo.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(Article.class, id));
 
-    //     art.setTitle(incoming.getTitle());
-    //     art.setUrl(incoming.getUrl());
-    //     art.setExplanation(incoming.getExplanation());
-    //     art.setEmail(incoming.getEmail());
-    //     art.setDateAdded(incoming.getDateAdded());
+        art.setTitle(incoming.getTitle());
+        art.setUrl(incoming.getUrl());
+        art.setExplanation(incoming.getExplanation());
+        art.setEmail(incoming.getEmail());
+        art.setDateAdded(incoming.getDateAdded());
 
-    //     articleRepo.save(art);
+        articleRepo.save(art);
 
-    //     return art;
-    // }
+        return art;
+    }
 }
