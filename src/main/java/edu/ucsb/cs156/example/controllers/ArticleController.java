@@ -80,17 +80,17 @@ public class ArticleController extends ApiController {
         return savedArticle;
     }
 
-    // @ApiOperation(value = "Delete an Article")
-    // @PreAuthorize("hasRole('ROLE_ADMIN')")
-    // @DeleteMapping("")
-    // public Object deleteArticle(
-    //         @ApiParam("id") @RequestParam Long id) {
-    //     Article art = articleRepo.findById(id)
-    //             .orElseThrow(() -> new EntityNotFoundException(Article.class, id));
+    @ApiOperation(value = "Delete an Article")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @DeleteMapping("")
+    public Object deleteArticle(
+            @ApiParam("id") @RequestParam Long id) {
+        Article art = articleRepo.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(Article.class, id));
 
-    //     articleRepo.delete(art);
-    //     return genericMessage("Article with id %s deleted".formatted(id));
-    // }
+        articleRepo.delete(art);
+        return genericMessage("Article with id %s deleted".formatted(id));
+    }
 
     @ApiOperation(value = "Update a single Article")
     @PreAuthorize("hasRole('ROLE_ADMIN')")

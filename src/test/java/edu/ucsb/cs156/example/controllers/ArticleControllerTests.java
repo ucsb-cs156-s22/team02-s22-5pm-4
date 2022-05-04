@@ -202,56 +202,56 @@ public class ArticleControllerTests extends ControllerTestCase {
                 assertEquals(expectedJson, responseString);
         }
 
-        // @WithMockUser(roles = { "ADMIN", "USER" })
-        // @Test
-        // public void admin_can_delete_a_article() throws Exception {
-        //         // arrange
+        @WithMockUser(roles = { "ADMIN", "USER" })
+        @Test
+        public void admin_can_delete_a_article() throws Exception {
+                // arrange
 
-        //         LocalDateTime ldt1 = LocalDateTime.parse("2022-01-03T00:00:00");
+                LocalDateTime ldt1 = LocalDateTime.parse("2022-01-03T00:00:00");
 
-        //         Article art1 = Article.builder()
-        //                         .title("topTenFoods")
-        //                         .url("www.google.com")
-        //                         .explanation("bestFood")
-        //                         .email("nwenstad@ucsb.edu")
-        //                         .dateAdded(ldt1)
-        //                         .build();
+                Article art1 = Article.builder()
+                                .title("topTenFoods")
+                                .url("www.google.com")
+                                .explanation("bestFood")
+                                .email("nwenstad@ucsb.edu")
+                                .dateAdded(ldt1)
+                                .build();
 
-        //         when(articleRepo.findById(eq(15L))).thenReturn(Optional.of(art1));
+                when(articleRepo.findById(eq(15L))).thenReturn(Optional.of(art1));
 
-        //         // act
-        //         MvcResult response = mockMvc.perform(
-        //                         delete("/api/article?id=15")
-        //                                         .with(csrf()))
-        //                         .andExpect(status().isOk()).andReturn();
+                // act
+                MvcResult response = mockMvc.perform(
+                                delete("/api/article?id=15")
+                                                .with(csrf()))
+                                .andExpect(status().isOk()).andReturn();
 
-        //         // assert
-        //         verify(articleRepo, times(1)).findById(15L);
-        //         verify(articleRepo, times(1)).delete(any());
+                // assert
+                verify(articleRepo, times(1)).findById(15L);
+                verify(articleRepo, times(1)).delete(any());
 
-        //         Map<String, Object> json = responseToJson(response);
-        //         assertEquals("Article with id 15 deleted", json.get("message"));
-        // }
+                Map<String, Object> json = responseToJson(response);
+                assertEquals("Article with id 15 deleted", json.get("message"));
+        }
 
-        // @WithMockUser(roles = { "ADMIN", "USER" })
-        // @Test
-        // public void admin_tries_to_delete_non_existant_article_and_gets_right_error_message()
-        //                 throws Exception {
-        //         // arrange
+        @WithMockUser(roles = { "ADMIN", "USER" })
+        @Test
+        public void admin_tries_to_delete_non_existant_article_and_gets_right_error_message()
+                        throws Exception {
+                // arrange
 
-        //         when(articleRepo.findById(eq(15L))).thenReturn(Optional.empty());
+                when(articleRepo.findById(eq(15L))).thenReturn(Optional.empty());
 
-        //         // act
-        //         MvcResult response = mockMvc.perform(
-        //                         delete("/api/article?id=15")
-        //                                         .with(csrf()))
-        //                         .andExpect(status().isNotFound()).andReturn();
+                // act
+                MvcResult response = mockMvc.perform(
+                                delete("/api/article?id=15")
+                                                .with(csrf()))
+                                .andExpect(status().isNotFound()).andReturn();
 
-        //         // assert
-        //         verify(articleRepo, times(1)).findById(15L);
-        //         Map<String, Object> json = responseToJson(response);
-        //         assertEquals("Article with id 15 not found", json.get("message"));
-        // }
+                // assert
+                verify(articleRepo, times(1)).findById(15L);
+                Map<String, Object> json = responseToJson(response);
+                assertEquals("Article with id 15 not found", json.get("message"));
+        }
 
         @WithMockUser(roles = { "ADMIN", "USER" })
         @Test
